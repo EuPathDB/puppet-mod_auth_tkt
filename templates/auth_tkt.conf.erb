@@ -1,0 +1,34 @@
+#
+#   It is called 02_auth_tkt.conf by default to ensure it is loaded early 
+#   - if you're just going an 'Include conf.d/*.conf' (it should be loaded
+#   before directories and virtual hosts you want to protect). If you're
+#   using with mod_perl, though, mod_perl should be loaded before this 
+#   (call your mod_perl config 01_perl.conf, for example).
+#
+# See 'man mod_auth_tkt' for details on the individual directives. 
+# Directives other than TKTAuthSecret usually go in Directory and
+# Location sections.
+#
+
+# LoadModule
+LoadModule auth_tkt_module modules/mod_auth_tkt.so
+
+# Shared secret - make sure the TKTAuthSecret is 02_auth_tkt.conf is 
+# commented out if you uncomment this one. And do CHANGE this, of course. ;-)
+TKTAuthSecret "<%= @secret %>"
+
+# Digest type to use - default is MD5, alternatives are SHA256 or SHA512
+#TKTAuthDigestType MD5
+
+# Used by sample CGI scripts to locate this config file
+SetEnv MOD_AUTH_TKT_CONF "/etc/httpd/conf.d/02_auth_tkt.conf"
+
+<Directory /b2f201a7-5ded-4795-93cf-677836873ccb>
+
+# TKTAuthIgnoreIP is global but must be defined in a Directory context.
+# And needs to have same setting in any real Directory context defined
+# in a virtual host configuration.
+TKTAuthIgnoreIP on
+
+</Directory>
+
